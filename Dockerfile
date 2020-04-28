@@ -1,14 +1,6 @@
-#####################
-#  Building Stage   #
-#####################
 FROM gitlab/gitlab-ce:12.10.1-ce.0 as builder
-
 ENV GITLAB_DIR=/opt/gitlab/embedded/service/gitlab-rails
 ENV GITLAB_GIT_ZH=https://gitlab.com/xhang/gitlab.git
-
-# Reference:
-# * https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/config/software/gitlab-rails.rb
-# * https://gitlab.com/gitlab-org/gitlab-ce/blob/master/.gitlab-ci.yml
 RUN set -xe \
     && echo " # Preparing ..." \
     && export DEBIAN_FRONTEND=noninteractive \
@@ -74,10 +66,6 @@ RUN set -xe \
     && find /usr/lib/ -name __pycache__ | xargs rm -rf \
     && rm -rf /tmp/gitlab /tmp/*.diff /root/.cache /var/lib/apt/lists/*
 
-
-######################
-#  Production Stage  #
-######################
 FROM gitlab/gitlab-ce:12.10.1-ce.0 as production
 
 RUN set -xe \
@@ -93,7 +81,7 @@ ENV TZ=Asia/Shanghai
 ENV GITLAB_VERSION=v12.10.1
 ENV GITLAB_DIR=/opt/gitlab/embedded/service/gitlab-rails
 ENV GITLAB_GIT_ZH=https://gitlab.com/xhang/gitlab.git
-ENV GITLAB_GIT_COMMIT_UPSTREAM=v12.10.1-ce.0
+ENV GITLAB_GIT_COMMIT_UPSTREAM=v12.10.1
 ENV GITLAB_GIT_COMMIT_ZH=v12.10.1-zh
 
 COPY --from=builder ${GITLAB_DIR}/app                   ${GITLAB_DIR}/app
